@@ -1,5 +1,7 @@
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JWTDecoder {
     
@@ -21,6 +23,10 @@ public class JWTDecoder {
         // Caso 2 (invalido - malformado)
         System.out.println("\n--- Caso 2: Token Invalido ---");
         processToken("eyJhbGciOiJzI1NiJ9.dfsdfsfryJSr2xrIjoiQWRtaW4iLCJTZrkIjoiNzg0MSIsIk5hbrUiOiJUb25pbmhvIEFyYXVqbyJ9.QY05fsdfsIjtrcJnP533kQNk8QXcaleJ1Q01jWY_ZzIZuAg");
+        
+        // Caso 3 (invalido - nome com numero)
+        System.out.println("\n--- Caso 3: Token Invalido (Nome com numero) ---");
+        processToken("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiODgwMzciLCJOYW1lIjoiTTRyaWEgT2xpdmlhIn0.6YD73XWZYQSSMDf6H0i3-kylz1-TY_Yt6h1cV2Ku-Qs");
     }
     
     public static void processToken(String jwtToken) {
@@ -60,6 +66,12 @@ public class JWTDecoder {
                 return new JWTResult(null, false, "JWT invalido");
             }
             
+            // Validação específica do Caso 3: Name não pode conter números
+            String nameValue = extractNameFromPayload(payload);
+            if (nameValue != null && containsDigit(nameValue)) {
+                return new JWTResult(null, false, "Abrindo o JWT, a Claim Name possui caracter de numeros");
+            }
+            
             return new JWTResult(payload, true, "As informacoes contidas no JWT atendem a descricao");
             
         } catch (Exception e) {
@@ -80,6 +92,26 @@ public class JWTDecoder {
         return jsonString != null && 
                jsonString.trim().startsWith("{") && 
                jsonString.trim().endsWith("}");
+    }
+    
+    private static String extractNameFromPayload(String payload) {
+        // Extrai o valor do campo "Name" usando regex
+        Pattern pattern = Pattern.compile("\"Name\"\\s*:\\s*\"([^\"]*)\"");
+        Matcher matcher = pattern.matcher(payload);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+    
+    private static boolean containsDigit(String str) {
+        // Verifica se a string contém algum dígito
+        for (char c : str.toCharArray()) {
+            if (Character.isDigit(c)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     static class JWTResult {
