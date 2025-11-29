@@ -34,7 +34,7 @@ public class JWTDecoder {
     }
     
     public static void processToken(String jwtToken) {
-        System.out.println("Token: " + jwtToken);
+        // REMOVIDO: System.out.println("Token: " + jwtToken);
         
         try {
             JWTResult result = decodeAndValidateJWT(jwtToken);
