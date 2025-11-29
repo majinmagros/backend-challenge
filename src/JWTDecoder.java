@@ -35,9 +35,12 @@ public class JWTDecoder {
         try {
             JWTResult result = decodeAndValidateJWT(jwtToken);
             System.out.println("Resultado:");
-            if (result.hasValidPayload()) {
+            
+            // SEMPRE mostra o JSON formatado, mesmo quando inválido (se tiver payload)
+            if (result.getPayload() != null) {
                 System.out.println(result.getFormattedPayload());
             }
+            
             System.out.println("STATUS: " + result.getStatus());
             System.out.println("JUSTIFICATIVA: " + result.getJustification());
             
@@ -69,7 +72,8 @@ public class JWTDecoder {
             // Validação específica do Caso 3: Name não pode conter números
             String nameValue = extractNameFromPayload(payload);
             if (nameValue != null && containsDigit(nameValue)) {
-                return new JWTResult(null, false, "Abrindo o JWT, a Claim Name possui caracter de numeros");
+                // Agora retorna o payload mesmo sendo inválido
+                return new JWTResult(payload, false, "Abrindo o JWT, a Claim Name possui caracter de numeros");
             }
             
             return new JWTResult(payload, true, "As informacoes contidas no JWT atendem a descricao");
@@ -125,8 +129,8 @@ public class JWTDecoder {
             this.justification = justification;
         }
         
-        public boolean hasValidPayload() {
-            return payload != null && valid;
+        public String getPayload() {
+            return payload;
         }
         
         public String getFormattedPayload() {
