@@ -17,19 +17,19 @@ public class JWTDecoder {
         System.out.println("=== BACKEND CHALLENGE - TODOS OS CASOS ===");
         
         // Caso 1 (valido)
-        System.out.println("\n--- Caso 1: Token Valido ---");
+        System.out.println("\n--- Caso 1: ");
         processToken("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJTZWVkIjoiNzg0MSIsIk5hbWUiOiJUb25pbmhvIEFyYXVqbyJ9.QY05sIjtrcJnP533kQNk8QXcaleJ1Q01jWY_ZzIZuAg");
         
         // Caso 2 (invalido - malformado)
-        System.out.println("\n--- Caso 2: Token Invalido ---");
+        System.out.println("\n--- Caso 2: ");
         processToken("eyJhbGciOiJzI1NiJ9.dfsdfsfryJSr2xrIjoiQWRtaW4iLCJTZrkIjoiNzg0MSIsIk5hbrUiOiJUb25pbmhvIEFyYXVqbyJ9.QY05fsdfsIjtrcJnP533kQNk8QXcaleJ1Q01jWY_ZzIZuAg");
         
         // Caso 3 (invalido - nome com numero)
-        System.out.println("\n--- Caso 3: Token Invalido (Nome com numero) ---");
+        System.out.println("\n--- Caso 3: ");
         processToken("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiODgwMzciLCJOYW1lIjoiTTRyaWEgT2xpdmlhIn0.6YD73XWZYQSSMDf6H0i3-kylz1-TY_Yt6h1cV2Ku-Qs");
         
         // Caso 4 (invalido - mais de 3 claims)
-        System.out.println("\n--- Caso 4: Token Invalido (Mais de 3 claims) ---");
+        System.out.println("\n--- Caso 4: ");
         processToken("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiTWVtYmVyIiwiT3JnIjoiQlIiLCJTZWVkIjoiMTQ2MjciLCJOYW1lIjoiVmFsZGlyIEFyYW5oYSJ9.cmrXV_Flm5mfdpfNUVopY_I2zeJUy4EZ4i3Fea98zvY");
     }
     
