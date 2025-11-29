@@ -27,6 +27,10 @@ public class JWTDecoder {
         // Caso 3 (invalido - nome com numero)
         System.out.println("\n--- Caso 3: Token Invalido (Nome com numero) ---");
         processToken("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiODgwMzciLCJOYW1lIjoiTTRyaWEgT2xpdmlhIn0.6YD73XWZYQSSMDf6H0i3-kylz1-TY_Yt6h1cV2Ku-Qs");
+        
+        // Caso 4 (invalido - mais de 3 claims)
+        System.out.println("\n--- Caso 4: Token Invalido (Mais de 3 claims) ---");
+        processToken("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiTWVtYmVyIiwiT3JnIjoiQlIiLCJTZWVkIjoiMTQ2MjciLCJOYW1lIjoiVmFsZGlyIEFyYW5oYSJ9.cmrXV_Flm5mfdpfNUVopY_I2zeJUy4EZ4i3Fea98zvY");
     }
     
     public static void processToken(String jwtToken) {
@@ -69,10 +73,15 @@ public class JWTDecoder {
                 return new JWTResult(null, false, "JWT invalido");
             }
             
+            // Validação específica do Caso 4: Deve ter exatamente 3 claims
+            int claimCount = countClaims(payload);
+            if (claimCount > 3) {
+                return new JWTResult(payload, false, "Abrindo o JWT, foi encontrado mais de 3 claims");
+            }
+            
             // Validação específica do Caso 3: Name não pode conter números
             String nameValue = extractNameFromPayload(payload);
             if (nameValue != null && containsDigit(nameValue)) {
-                // Agora retorna o payload mesmo sendo inválido
                 return new JWTResult(payload, false, "Abrindo o JWT, a Claim Name possui caracter de numeros");
             }
             
@@ -116,6 +125,18 @@ public class JWTDecoder {
             }
         }
         return false;
+    }
+    
+    private static int countClaims(String payload) {
+        // Conta o número de claims (chaves) no JSON
+        // Usa regex para encontrar padrões de "chave": valor
+        Pattern pattern = Pattern.compile("\"\\w+\"\\s*:");
+        Matcher matcher = pattern.matcher(payload);
+        int count = 0;
+        while (matcher.find()) {
+            count++;
+        }
+        return count;
     }
     
     static class JWTResult {
